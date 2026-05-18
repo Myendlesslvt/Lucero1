@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucero mi niña</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000}
+#app{width:100%;height:100vh;position:relative;overflow:hidden}
+#bg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#petal{position:fixed;inset:0;pointer-events:none;z-index:40;display:none}
+#ui{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:1rem}
+.glass{
+  background:rgba(10,0,20,0.38);
+  backdrop-filter:blur(24px) saturate(200%);
+  -webkit-backdrop-filter:blur(24px) saturate(200%);
+  border:1px solid rgba(255,180,220,0.14);
+  border-radius:28px;
+  padding:clamp(1.8rem,5vw,3rem) clamp(1.5rem,5vw,3.5rem);
+  max-width:min(580px,90vw);
+  width:100%;
+  pointer-events:all;
+  box-shadow:0 0 60px rgba(139,0,50,.2),0 0 120px rgba(60,0,100,.14),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.lotus-top{font-size:clamp(2rem,6vw,3rem);display:block;text-align:center;margin-bottom:.5rem;animation:floatY 3.5s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(255,100,180,.7))}
+@keyframes floatY{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.title{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(3rem,10vw,6rem);
+  text-align:center;line-height:1.15;
+  background:linear-gradient(135deg,#ffb3cc 0%,#ee60a8 25%,#c030c8 55%,#8855ee 85%,#ffaacc 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 28px rgba(230,60,180,.5));
+  animation:titlePulse 5s ease-in-out infinite;
+}
+@keyframes titlePulse{0%,100%{filter:drop-shadow(0 0 18px rgba(230,60,180,.4))}50%{filter:drop-shadow(0 0 45px rgba(230,60,180,.85))}}
+.divider{width:70%;height:1px;background:linear-gradient(90deg,transparent,rgba(220,100,180,.7),rgba(150,60,220,.6),transparent);margin:1.1rem auto;animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:.5;transform:scaleX(.75)}50%{opacity:1;transform:scaleX(1)}}
+.msg{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.95rem,2.8vw,1.22rem);
+  color:rgba(255,215,235,.84);line-height:2;text-align:center;letter-spacing:.02em;
+  animation:fadeUp 2.2s ease forwards;animation-delay:.5s;opacity:0;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(.75rem,2vw,.9rem);color:rgba(190,140,210,.55);
+  letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-top:.5rem;
+  animation:fadeUp 2.2s ease forwards;animation-delay:1.1s;opacity:0;
+}
+.btnwrap{margin-top:1.8rem;display:flex;justify-content:center;gap:1.2rem;flex-wrap:wrap;animation:fadeUp 2.2s ease forwards;animation-delay:1.7s;opacity:0}
+.btn{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1rem,2.8vw,1.18rem);letter-spacing:.07em;color:#fff;
+  background:linear-gradient(135deg,rgba(139,0,0,.85),rgba(90,0,70,.9),rgba(46,8,84,.88));
+  border:1px solid rgba(255,120,170,.38);padding:.9rem 2.4rem;border-radius:50px;
+  cursor:pointer;transition:all .4s ease;
+  box-shadow:0 0 22px rgba(139,0,0,.32),0 0 44px rgba(46,8,84,.22);
+  touch-action:manipulation;min-height:44px;
+}
+.btn:hover{
+  transform:scale(1.07);
+  box-shadow:0 0 38px rgba(255,40,100,.7),0 0 75px rgba(200,0,220,.48),0 0 110px rgba(139,0,0,.32);
+  border-color:rgba(255,160,200,.85);
+}
+.btn-no{
+  font-family:'Cormorant Garamond',serif;
+  letter-spacing:.07em;color:rgba(255,200,220,.65);
+  background:rgba(40,0,40,.45);
+  border:1px solid rgba(180,80,120,.25);border-radius:50px;
+  cursor:pointer;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1), opacity .5s ease, font-size .5s ease, padding .5s ease, box-shadow .3s ease;
+  white-space:nowrap;overflow:hidden;
+  touch-action:manipulation;min-height:44px;
+}
+.btn-no:hover{
+  box-shadow:0 0 14px rgba(180,80,120,.3);
+  border-color:rgba(200,100,140,.45);
+}
+#modal{
+  display:none;position:fixed;inset:0;z-index:50;
+  background:rgba(0,0,0,.48);backdrop-filter:blur(7px);
+  align-items:center;justify-content:center;
+  padding:1rem;
+  overscroll-behavior:contain;
+}
+#modal.on{display:flex;animation:mIn .6s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.mcard{
+  background:rgba(15,0,25,.85);backdrop-filter:blur(30px);
+  border:1px solid rgba(255,140,190,.24);border-radius:26px;
+  padding:2.5rem 2.2rem;text-align:center;max-width:min(480px,92vw);
+  box-shadow:0 0 80px rgba(255,40,100,.32),0 0 160px rgba(180,0,220,.22);
+  position:relative;
+  max-height:88svh;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.mheart{font-size:3.2rem;animation:beat .9s ease-in-out infinite;display:block;margin-bottom:.7rem}
+@keyframes beat{0%,100%{transform:scale(1)}35%{transform:scale(1.28)}65%{transform:scale(.9)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}35%{transform:scale(1.22)}65%{transform:scale(.92)}}
+.mtitle{
+  font-family:'Great Vibes',cursive;font-size:clamp(2.2rem,6vw,3.8rem);
+  background:linear-gradient(135deg,#ffb3cc,#e060a8,#c030c8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.8rem; line-height:1.2;
+}
+.mtext{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(.95rem,2.5vw,1.1rem);color:rgba(255,200,225,.87);line-height:1.9}
+.close-hint{font-family:'Cormorant Garamond',serif;font-size:.72rem;color:rgba(200,150,200,.35);margin-top:1rem;letter-spacing:.1em}
+.slide{display:none;animation:slideIn .5s ease}
+.slide.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.btn-next{
+  margin-top:1.4rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(.9rem,2.5vw,1.05rem);letter-spacing:.08em;color:#fff;
+  background:linear-gradient(135deg,rgba(139,0,0,.8),rgba(90,0,70,.85),rgba(46,8,84,.82));
+  border:1px solid rgba(255,120,170,.35);padding:.7rem 2rem;border-radius:50px;
+  cursor:pointer;transition:all .35s ease;display:inline-block;
+  box-shadow:0 0 18px rgba(139,0,0,.28);
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  min-height:44px;
+}
+.btn-next:hover,.btn-next:active{
+  transform:scale(1.06);
+  box-shadow:0 0 30px rgba(255,40,100,.55),0 0 60px rgba(200,0,220,.35);
+  border-color:rgba(255,160,200,.75);
+}
+
+
+
+.tag{
+  display:inline-block;
+  font-family:'Cormorant Garamond',serif;font-style:normal;
+  font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,180,220,.55);border:1px solid rgba(255,140,190,.2);
+  border-radius:20px;padding:.18rem .75rem;margin:.2rem .15rem;
+}
+.detail-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin-top:.8rem}
+
+.slide-counter{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.88rem;letter-spacing:.18em;
+  color:rgba(200,145,195,.28);
+  text-align:center;margin-top:.85rem;
+  user-select:none;
+}
+.slide-counter .cur{
+  color:rgba(255,175,210,.58);
+  font-style:italic;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="bg"></canvas>
+  <canvas id="petal"></canvas>
+
+  <div id="ui">
+    <div class="glass">
+      <span class="lotus-top">🪷</span>
+      <h1 class="title">Lucero mi niña</h1>
+      <div class="divider"></div>
+      <p class="msg">
+        En la quietud de esta noche infinita,<br>
+        como el loto que florece sobre el lago,<br>
+        tú emerges luminosa en mi vida.<br>
+        Cada estrella del cielo lleva tu nombre.
+      </p>
+      <p class="sub">✦ con todo mi corazón ✦</p>
+      <p id="propQuestion" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.8vw,1.15rem);color:rgba(255,215,235,.88);text-align:center;margin-bottom:.2rem;animation:fadeUp 2.2s ease forwards;animation-delay:1.5s;opacity:0;">¿Quieres ser mi novia? 🌹</p>
+      <div class="btnwrap">
+        <button class="btn" id="btnSi">Sí ❤️</button>
+        <button class="btn-no" id="btnNo">No 🥀</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal">
+    <div class="mcard">
+
+      <!-- SLIDE 1: Declaración de amor -->
+      <div class="slide active" id="slide1">
+        <span class="mheart">❤️</span>
+        <h2 class="mtitle">Te amo, mi niña</h2>
+        <p class="mtext">
+          Te amaré hoy, mañana y siempre.<br>
+          Eres mi todo, mi niña, mi gatita,<br>
+          mi princesa, mi amorcito...<br><br>
+          Y siempre estaré para ti<br>
+          en cuerpo <em>-&lt;-</em>, mente y alma 🤍
+        </p>
+        <button class="btn-next" id="nextBtn1">Siguiente ❤️</button>
+        
+        <p class="slide-counter"><span class="cur">1</span> · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 2: Lucero / la luna / luz en la oscuridad -->
+      <div class="slide" id="slide2">
+        <span style="font-size:2.8rem;display:block;margin-bottom:.6rem;filter:drop-shadow(0 0 12px rgba(255,240,180,.7))">🌕</span>
+        <h2 class="mtitle">La luz en mis noches</h2>
+        <p class="mtext">
+          Lucero — así se llama la personita a la que amo,<br>
+          la que ilumina mis días y hace que no me pierda.<br><br>
+          Cuando todo es oscuro y no veo el camino,<br>
+          cuando me pierdo en mis propios laberintos,<br>
+          tu voz es la mejor melodía para calmarme.<br><br>
+          <em>Tú apareces</em>... y de repente todo tiene sentido.<br><br>
+          Eres mi Lucero. ❤️ Mi norte. Mi claridad.
+        </p>
+        <button class="btn-next" id="nextBtn2">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · <span class="cur">2</span> · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 3: Khalil Gibran -->
+      <div class="slide" id="slide3">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">📖</span>
+        <h2 class="mtitle">El loco</h2>
+        <p class="mtext">
+          <em>"Surge en cada uno de nosotros un loco<br>
+          dispuesto a vivir sin pretextos ni ocultaciones,<br>
+          y sobre todo, sin la necesidad de que nos comprendan,<br>
+          porque cuando nos comprenden,<br>
+          encasillan y esclavizan algo de nosotros."</em>
+        </p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:.85rem;color:rgba(200,160,220,.55);margin-top:.9rem;letter-spacing:.08em;">
+          — Khalil Gibran, <em>El loco</em> (1918)
+        </p>
+        <button class="btn-next" id="nextBtn3">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · <span class="cur">3</span> · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 4: El Principito -->
+      <div class="slide" id="slide4">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">🌹</span>
+        <h2 class="mtitle">El Principito</h2>
+        <p class="mtext">
+          Hay una frase que siempre me llega al alma:<br><br>
+          <em>"Eres responsable para siempre<br>
+          de lo que has decidido cuidar."</em><br><br>
+          Yo te elegí a ti, mi niña.<br>
+          Y en ese instante me hice responsable<br>
+          de tu sonrisa, de tus miedos,<br>
+          de cada parte de ti,<br>
+          no por obligación, sino por amor. ❤️
+        </p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:.85rem;color:rgba(200,160,220,.55);margin-top:.9rem;letter-spacing:.08em;">
+          — Antoine de Saint-Exupéry, <em>El Principito</em>
+        </p>
+        <button class="btn-next" id="nextBtn4">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · <span class="cur">4</span> · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 5: Su comida y sus detalles -->
+      <div class="slide" id="slide5">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">🍽️</span>
+        <h2 class="mtitle">Cada detalle tuyo</h2>
+        <p class="mtext">
+          Me encantaría probar tu comida algún día,<br>
+          porque estoy seguro de que es tan especial<br>
+          como tú. Seguramente es deliciosa. ❤️<br><br>
+          Pero más que eso, amo cada detalle tuyo:<br>
+          la forma en que haces las cosas,<br>
+          tu manera de ver el mundo,<br>
+          esos pequeños gestos que solo tú tienes<br>
+          y que me hacen quererte más cada día.
+        </p>
+        <button class="btn-next" id="nextBtn5">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · <span class="cur">5</span> · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 6: Peluches y su gatita -->
+      <div class="slide" id="slide6">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">🧸</span>
+        <h2 class="mtitle">Tu mundo tierno</h2>
+        <p class="mtext">
+          Me encanta que te gusten los peluches,<br>
+          porque me pareces uno de ellos:<br>
+          alguien a quien quiero abrazar todas las noches<br>
+          y cuidar siempre. ❤️<br><br>
+          Cada peluche que tienes<br>
+          guarda una parte de quién eres:<br>
+          alguien con un corazón enorme,<br>
+          lleno de ternura y de vida.<br><br>
+          Y tu gatita... ¿cómo no adorarla?<br>
+          Porque tiene la mejor dueña del mundo,<br>
+          la más cariñosa, la más bonita,<br>
+          la más mía. 🤍
+        </p>
+        <button class="btn-next" id="nextBtn6">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · <span class="cur">6</span> · 7 · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 7: El futuro juntos -->
+      <div class="slide" id="slide7">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">❤️</span>
+        <h2 class="mtitle">Nuestro mañana</h2>
+        <p class="mtext">
+          Quiero que vivamos juntos cada amanecer,<br>
+          que veamos el mañana todos los días.<br>
+          Quiero que lleguemos a ser abuelitos<br>
+          contándonos historias de todo lo que vivimos. ❤️<br><br>
+          Quiero cuidarte, protegerte,<br>
+          amarte todos los días sin excepción.<br><br>
+          Y llegar a casa por las noches<br>
+          sabiendo que tú me esperas,<br>
+          para hablar de todo y de nada,<br>
+          solo tú y yo, mi niña. 🤍
+        </p>
+        <button class="btn-next" id="nextBtn7">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · <span class="cur">7</span> · 8 · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 8: Amo cada detalle que hace conmigo -->
+      <div class="slide" id="slide8">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">🤍</span>
+        <h2 class="mtitle">Todo lo que amas hacer</h2>
+        <p class="mtext">
+          Amo los detalles que tienes conmigo,<br>
+          amo tu letra, esa forma única tuya<br>
+          de plasmar lo que sientes. ❤️<br><br>
+          Amo tu esfuerzo por querer hacer algo para mí,<br>
+          amo tus ganas de animarme<br>
+          incluso cuando tú no estás bien,<br>
+          porque eso dice todo de quién eres.<br><br>
+          Amo cada parte de ti:<br>
+          tu cuerpo, tu voz, tus sentimientos,<br>
+          tus pensamientos, todo. 🤍<br>
+          Absolutamente todo.
+        </p>
+        <button class="btn-next" id="nextBtn8">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · <span class="cur">8</span> · 9 · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 9: 100% mi tipo -->
+      <div class="slide" id="slide9">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">❤️</span>
+        <h2 class="mtitle">Eres 100% mi tipo</h2>
+        <p class="mtext">
+          Me gusta todo de ti, mi niña.<br>
+          Tu voz, cuando dices cosas tiernas,<br>
+          tu comportamiento, tu espontaneidad,<br>
+          tu carita, tus gustos,<br>
+          hasta tus cambios de humor. ❤️<br><br>
+          Tu elegancia, tu forma de ver el mundo<br>
+          después de todo lo que has vivido,<br>
+          tu belleza, tu ternura.<br><br>
+          Eres exactamente<br>
+          lo que siempre quise encontrar. 🤍
+        </p>
+        <button class="btn-next" id="nextBtn9">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · <span class="cur">9</span> · 10 · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 10: ¿Soy tu mayor? -->
+      <div class="slide" id="slide10">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">🥺</span>
+        <h2 class="mtitle">Una preguntita...</h2>
+        <p class="mtext" style="margin-bottom:1.2rem">
+          Soy tu mayor,<br>
+          ¿cierto, mi niña? ❤️
+        </p>
+        <div id="slide10Btns" style="display:flex;justify-content:center;align-items:center;gap:1.2rem;position:relative;min-height:56px;">
+          <button class="btn-next" id="slide10Yes" style="margin-top:0;position:relative;z-index:2;">Claro que sí ❤️</button>
+          <button id="slide10No" style="
+            font-family:'Cormorant Garamond',serif;font-size:.98rem;letter-spacing:.06em;
+            color:rgba(255,200,220,.65);background:rgba(40,0,40,.45);
+            border:1px solid rgba(180,80,120,.25);border-radius:50px;
+            padding:.65rem 1.5rem;cursor:pointer;
+            position:absolute;
+            transition:left .15s ease, top .15s ease;
+            -webkit-tap-highlight-color:transparent;
+            white-space:nowrap;
+          ">Para nada 😏</button>
+        </div>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · <span class="cur">10</span> · 11 · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 11: Me alegra que lo aceptes (NUEVO) -->
+      <div class="slide" id="slide11">
+        <span style="font-size:2.8rem;display:block;margin-bottom:.7rem;animation:heartbeat 1.4s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,100,160,.8))">❤️</span>
+        <h2 class="mtitle" style="font-size:clamp(2rem,5.5vw,3.2rem);">Me alegra mucho</h2>
+        <p class="mtext" style="line-height:2.1">
+          Me alegra que lo aceptes, mi amorcito.<br><br>
+          Como tu mayor, te prometo que<br>
+          te <em>protegeré</em>, te <em>amaré</em> y te <em>cuidaré</em>.<br><br>
+          Y puedes contarme todo:<br>
+          lo que te aqueja, lo que te duele,<br>
+          lo que te pesa en el corazón.<br><br>
+          <span style="font-family:'Great Vibes',cursive;font-size:1.45em;background:linear-gradient(135deg,#ffb3cc,#e060a8,#c030c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Estoy para ti, siempre.</span> 🤍
+        </p>
+        <button class="btn-next" id="nextBtn11">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · <span class="cur">11</span> · 12 · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 12: Mi amorcito (antes slide 11, movido aquí) -->
+      <div class="slide" id="slide12">
+        <span style="font-size:2.5rem;display:block;margin-bottom:.8rem">❤️</span>
+        <h2 class="mtitle">Mi amorcito</h2>
+        <p class="mtext">
+          Mi vida, mi amorcito...<br>
+          Quiero comprenderte cada día,<br>
+          aprender de ti sin cansarme jamás.<br><br>
+          Quiero amarte con paciencia,<br>
+          respetarte en cada paso,<br>
+          esperarte cada noche con ganas<br>
+          de escucharte, de estar contigo. ❤️<br><br>
+          Quiero cuidar de ti<br>
+          no solo cuando sea fácil,<br>
+          sino especialmente cuando no lo sea.<br><br>
+          Porque tú lo mereces todo, mi niña. 🤍
+        </p>
+        <button class="btn-next" id="nextBtn12">Siguiente ❤️</button>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · <span class="cur">12</span> · 13 · 14</p>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar</p>
+      </div>
+
+      <!-- SLIDE 13: Un 13 nació (NUEVO) -->
+      <div class="slide" id="slide13">
+        <span style="font-size:2.8rem;display:block;margin-bottom:.8rem;filter:drop-shadow(0 0 16px rgba(255,220,100,.75))">🌙</span>
+        <h2 class="mtitle" style="font-size:clamp(1.9rem,5vw,3rem);">Un 13...</h2>
+        <p class="mtext" style="line-height:2.1">
+          Un 13 nació la personita de mis ojos,<br>
+          la personita de mi vida,<br>
+          <em>la personita que amo.</em> ❤️<br><br>
+          Quiero vivir muchas cosas contigo, amorcito.<br>
+          Cuidar de ti en las noches,<br>
+          amar cada respiración tuya<br>
+          mientras velo por ti.<br><br>
+          Cuando mi respiración se mezcla con la tuya<br>
+          y nos volvemos uno...<br><br>
+          <span style="font-family:'Great Vibes',cursive;font-size:1.4em;background:linear-gradient(135deg,#ffb3cc,#e060a8,#c030c8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ahí es exactamente donde quiero estar.</span> 🤍
+        </p>
+        
+        <p class="slide-counter">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · <span class="cur">13</span> · 14</p>
+        <button class="btn-next" id="nextBtn13">Siguiente ❤️</button>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar 🌸</p>
+      </div>
+
+      <!-- SLIDE 14: Nuestra canción -->
+      <div class="slide" id="slide14">
+        <span style="font-size:2.8rem;display:block;margin-bottom:.7rem;filter:drop-shadow(0 0 16px rgba(255,150,200,.8))">🎵</span>
+        <h2 class="mtitle" style="font-size:clamp(1.9rem,5.5vw,3rem);">Nuestra canción</h2>
+        <p class="mtext" style="line-height:2.1">
+          Esta canción la escucho<br>
+          y solo pienso en ti, mi niña.<br><br>
+          En cada nota, en cada palabra,<br>
+          estás tú. ❤️<br><br>
+          Cierra los ojos y escúchala...<br>
+          <em>es para ti, de mi parte.</em> 🤍
+        </p>
+
+        <!-- YouTube player oculto -->
+        <div id="yt-player" style="width:0;height:0;overflow:hidden;position:absolute;"></div>
+
+        <!-- Controles visuales -->
+        <div id="music-controls" style="margin-top:1.4rem;display:flex;align-items:center;justify-content:center;gap:1rem;">
+          <button id="btnPlay" style="
+            font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.06em;
+            color:#fff;background:linear-gradient(135deg,rgba(139,0,0,.8),rgba(90,0,70,.85),rgba(46,8,84,.82));
+            border:1px solid rgba(255,120,170,.35);padding:.65rem 1.8rem;border-radius:50px;
+            cursor:pointer;touch-action:manipulation;min-height:44px;
+            box-shadow:0 0 18px rgba(139,0,0,.28);
+            -webkit-tap-highlight-color:transparent;
+            transition:all .35s ease;
+          ">▶ Reproducir</button>
+          <button id="btnPause" style="
+            font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.06em;
+            color:rgba(255,200,220,.7);background:rgba(40,0,40,.45);
+            border:1px solid rgba(180,80,120,.25);padding:.65rem 1.8rem;border-radius:50px;
+            cursor:pointer;touch-action:manipulation;min-height:44px;
+            -webkit-tap-highlight-color:transparent;
+            transition:all .35s ease;display:none;
+          ">⏸ Pausar</button>
+        </div>
+
+        <p id="music-status" style="
+          font-family:'Cormorant Garamond',serif;font-style:italic;
+          font-size:.8rem;color:rgba(200,150,200,.45);
+          margin-top:.7rem;letter-spacing:.08em;
+        ">toca ▶ para escuchar</p>
+
+        <div class="slide-counter" style="margin-top:.85rem">1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 11 · 12 · 13 · <span class="cur">14</span></div>
+        <p class="close-hint" style="margin-top:.8rem">toca fuera para cerrar 🎶</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  let W, H, T = 0;
+  const stars=[], fireflies=[], lotusArr=[], ripples=[];
+
+  function rnd(a,b){return a+Math.random()*(b-a)}
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    initScene();
+  }
+
+  function initScene(){
+    stars.length=0; fireflies.length=0; lotusArr.length=0;
+    const sc = Math.min(300, Math.floor(W*H/3200));
+    for(let i=0;i<sc;i++){
+      stars.push({
+        x:rnd(0,W), y:rnd(0,H*.52),
+        r:rnd(.15,1.5), a:rnd(.3,1),
+        tw:rnd(.005,.03), tp:Math.random()*Math.PI*2,
+        col:Math.random()<.12?'#b8d8ff':Math.random()<.08?'#ffd8aa':'#ffffff'
+      });
+    }
+    for(let i=0;i<20;i++){
+      fireflies.push({
+        x:rnd(W*.05,W*.95), y:rnd(H*.4,H*.62),
+        vx:rnd(-.45,.45), vy:rnd(-.22,.22),
+        a:rnd(.35,.85), tp:Math.random()*Math.PI*2,
+        tw:rnd(.018,.055), sz:rnd(1.5,3.8)
+      });
+    }
+    const rows = [
+      {yFrac:.515, zBase:.16, count:22, size:7,  spread:.96},
+      {yFrac:.545, zBase:.22, count:18, size:11, spread:.94},
+      {yFrac:.580, zBase:.30, count:15, size:16, spread:.92},
+      {yFrac:.620, zBase:.40, count:13, size:22, spread:.90},
+      {yFrac:.665, zBase:.52, count:11, size:30, spread:.88},
+      {yFrac:.715, zBase:.64, count:9,  size:40, spread:.86},
+      {yFrac:.775, zBase:.76, count:7,  size:50, spread:.84},
+      {yFrac:.845, zBase:.88, count:5,  size:62, spread:.80},
+    ];
+    rows.forEach((row,ri)=>{
+      const n = row.count;
+      for(let i=0;i<n;i++){
+        const t = n===1 ? 0.5 : i/(n-1);
+        const baseX = row.spread*W*0.5 + (t-0.5)*row.spread*W;
+        const jitterX = rnd(-W*0.018, W*0.018);
+        const jitterY = rnd(-H*0.012, H*0.012);
+        const zVal = row.zBase + rnd(-.05, .05);
+        const sizeVar = row.size * rnd(.78, 1.28);
+        lotusArr.push({
+          x: baseX + jitterX,
+          y: row.yFrac*H + jitterY,
+          size: sizeVar,
+          phase: (i/n)*Math.PI*2 + ri*1.3,
+          speed: rnd(.0015,.006),
+          open: rnd(.45,1),
+          hue: 320 + Math.sin(t*Math.PI)*28 + rnd(-8,8),
+          sat: rnd(62,92),
+          z: Math.max(.1, zVal),
+          la: (i/n)*Math.PI*2 + Math.PI/n
+        });
+      }
+    });
+  }
+
+  function drawSky(){
+    const g=ctx.createLinearGradient(0,0,0,H*.52);
+    g.addColorStop(0,'#01000a');
+    g.addColorStop(.2,'#08011a');
+    g.addColorStop(.5,'#110228');
+    g.addColorStop(.8,'#180332');
+    g.addColorStop(1,'#1e0038');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H*.52);
+  }
+
+  function drawMilkyWay(){
+    for(let i=0;i<5;i++){
+      const gx=ctx.createRadialGradient(W*.5,H*.18+i*8,0,W*.5,H*.2,W*.45);
+      gx.addColorStop(0,'rgba(0,0,0,0)');
+      gx.addColorStop(.4,`rgba(${80+i*10},${40+i*6},${170+i*8},.04)`);
+      gx.addColorStop(.7,`rgba(${100+i*8},${55+i*5},${200+i*6},.055)`);
+      gx.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=gx;
+      ctx.beginPath();
+      ctx.ellipse(W*.5,H*.18,W*.42,H*.09+i*6,0,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function drawMoon(){
+    const mx=W*.50, my=H*.10, mr=Math.min(W,H)*.062;
+    const ga=ctx.createRadialGradient(mx,my,0,mx,my,mr*5);
+    ga.addColorStop(0,'rgba(255,240,200,.22)');
+    ga.addColorStop(.25,'rgba(210,180,255,.09)');
+    ga.addColorStop(.6,'rgba(150,100,255,.03)');
+    ga.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=ga; ctx.beginPath(); ctx.arc(mx,my,mr*5,0,Math.PI*2); ctx.fill();
+    const gm=ctx.createRadialGradient(mx-mr*.2,my-mr*.14,0,mx,my,mr);
+    gm.addColorStop(0,'#fffde8');
+    gm.addColorStop(.5,'#f4ecc4');
+    gm.addColorStop(1,'#dccf8a');
+    ctx.fillStyle=gm; ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(6,0,20,.55)';
+    ctx.beginPath(); ctx.arc(mx+mr*.32,my-mr*.1,mr*.84,0,Math.PI*2); ctx.fill();
+    const moonReflG=ctx.createLinearGradient(mx-mr,H*.5,mx+mr,H);
+    moonReflG.addColorStop(0,'rgba(255,248,200,0)');
+    moonReflG.addColorStop(.1,'rgba(255,248,200,.12)');
+    moonReflG.addColorStop(.5,'rgba(240,225,175,.07)');
+    moonReflG.addColorStop(1,'rgba(200,185,140,.01)');
+    ctx.fillStyle=moonReflG;
+    ctx.beginPath();
+    ctx.moveTo(mx-mr*.6,H*.5);
+    ctx.bezierCurveTo(mx-W*.12,H*.6,mx-W*.08,H*.75,mx-W*.04,H);
+    ctx.lineTo(mx+W*.04,H);
+    ctx.bezierCurveTo(mx+W*.08,H*.75,mx+W*.12,H*.6,mx+mr*.6,H*.5);
+    ctx.fill();
+  }
+
+  function drawStars(){
+    stars.forEach(s=>{
+      const f=Math.sin(T*s.tw+s.tp)*.4+.6;
+      ctx.globalAlpha=s.a*f;
+      ctx.fillStyle=s.col;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+      if(s.r>1.0){
+        ctx.globalAlpha=s.a*f*.35;
+        ctx.strokeStyle=s.col; ctx.lineWidth=.5;
+        ctx.beginPath(); ctx.moveTo(s.x-s.r*3.5,s.y); ctx.lineTo(s.x+s.r*3.5,s.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(s.x,s.y-s.r*3.5); ctx.lineTo(s.x,s.y+s.r*3.5); ctx.stroke();
+      }
+    });
+    ctx.globalAlpha=1;
+  }
+
+  function drawMountains(){
+    ctx.fillStyle='#060010';
+    ctx.beginPath(); ctx.moveTo(0,H*.52);
+    [
+      [0,H*.52],[W*.04,H*.42],[W*.10,H*.46],[W*.17,H*.36],[W*.24,H*.43],
+      [W*.30,H*.32],[W*.38,H*.40],[W*.44,H*.28],[W*.50,H*.22],
+      [W*.56,H*.28],[W*.62,H*.40],[W*.70,H*.32],[W*.76,H*.43],
+      [W*.83,H*.36],[W*.90,H*.46],[W*.96,H*.42],[W,H*.52]
+    ].forEach(p=>ctx.lineTo(p[0],p[1]));
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#0b0116';
+    ctx.beginPath(); ctx.moveTo(0,H*.52);
+    [
+      [0,H*.50],[W*.06,H*.44],[W*.14,H*.47],[W*.22,H*.39],[W*.30,H*.45],
+      [W*.38,H*.37],[W*.44,H*.43],[W*.50,H*.33],
+      [W*.56,H*.43],[W*.62,H*.37],[W*.70,H*.45],[W*.78,H*.39],
+      [W*.86,H*.47],[W*.94,H*.44],[W,H*.50]
+    ].forEach(p=>ctx.lineTo(p[0],p[1]));
+    ctx.closePath(); ctx.fill();
+    const mg=ctx.createLinearGradient(W*.5,H*.22,W*.5,H*.52);
+    mg.addColorStop(0,'rgba(80,20,120,.08)');
+    mg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=mg; ctx.fillRect(0,H*.22,W,H*.3);
+  }
+
+  function drawWater(){
+    const wy=H*.5;
+    const wg=ctx.createLinearGradient(0,wy,0,H);
+    wg.addColorStop(0,'#0d0120');
+    wg.addColorStop(.25,'#110228');
+    wg.addColorStop(.6,'#090118');
+    wg.addColorStop(1,'#04000e');
+    ctx.fillStyle=wg; ctx.fillRect(0,wy,W,H);
+
+    const mx=W*.50;
+    const rg=ctx.createLinearGradient(mx-60,wy,mx+60,H);
+    rg.addColorStop(0,'rgba(255,245,195,.0)');
+    rg.addColorStop(.1,'rgba(255,245,195,.0)');
+    rg.addColorStop(.5,'rgba(240,220,175,.0)');
+    rg.addColorStop(1,'rgba(200,180,140,.0)');
+    ctx.fillStyle=rg;
+    ctx.beginPath();
+    ctx.moveTo(mx-12,wy);
+    ctx.bezierCurveTo(mx-75,wy+H*.1,mx-110,wy+H*.25,mx-55,H);
+    ctx.lineTo(mx+55,H);
+    ctx.bezierCurveTo(mx+110,wy+H*.25,mx+75,wy+H*.1,mx+12,wy);
+    ctx.fill();
+
+    for(let i=0;i<26;i++){
+      const ry=wy+(i/26)*(H-wy);
+      const alpha=.045-i*.0016;
+      if(alpha<=0) continue;
+      ctx.strokeStyle=`rgba(170,130,255,${alpha})`;
+      ctx.lineWidth=.55;
+      ctx.beginPath();
+      for(let x=0;x<=W;x+=10){
+        const wy2=ry+Math.sin(x*.016+T*.38+i*.28)*2.8;
+        x===0?ctx.moveTo(x,wy2):ctx.lineTo(x,wy2);
+      }
+      ctx.stroke();
+    }
+
+    stars.slice(0,80).forEach(s=>{
+      if(s.y>H*.48) return;
+      const rY=H-(s.y-H*.5)*.52+H*.5;
+      if(rY<wy||rY>H) return;
+      const f=Math.sin(T*s.tw*1.4+s.tp+1)*.3+.7;
+      const wx=Math.sin(T*.75+s.x*.02)*2.5;
+      ctx.globalAlpha=s.a*f*.28;
+      ctx.fillStyle=s.col;
+      ctx.beginPath(); ctx.ellipse(s.x+wx,rY,s.r*.9,s.r*.38,0,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+  }
+
+  function drawFog(){
+    for(let i=0;i<4;i++){
+      const fg=ctx.createRadialGradient(W*(.18+i*.22),H*.515,0,W*(.18+i*.22),H*.515,W*.32);
+      fg.addColorStop(0,`rgba(${55+i*18},${18+i*8},${95+i*14},.08)`);
+      fg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=fg;
+      ctx.beginPath();
+      ctx.ellipse(W*(.18+i*.22),H*.515+Math.sin(T*.28+i)*5,W*.32,H*.055,0,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function drawRipples(){
+    if(Math.random()<.009){
+      ripples.push({x:rnd(W*.04,W*.96),y:rnd(H*.52,H*.92),r:0,maxR:rnd(28,75),a:.38});
+    }
+    for(let i=ripples.length-1;i>=0;i--){
+      const rp=ripples[i];
+      rp.r+=.55; rp.a-=.0075;
+      if(rp.a<=0||rp.r>rp.maxR){ripples.splice(i,1);continue;}
+      ctx.strokeStyle=`rgba(175,135,255,${rp.a})`;
+      ctx.lineWidth=.65;
+      ctx.beginPath(); ctx.ellipse(rp.x,rp.y,rp.r,rp.r*.28,0,0,Math.PI*2); ctx.stroke();
+    }
+  }
+
+  function drawLilyPad(l){
+    if(l.y<H*.5) return;
+    const s=l.size*l.z*1.15;
+    const bob=Math.sin(T*l.speed*2+l.phase)*2;
+    ctx.save();
+    ctx.translate(l.x, l.y+bob);
+    ctx.scale(1, 0.28+l.z*.18);
+    ctx.rotate(l.la+Math.sin(T*l.speed+l.phase)*.1);
+    ctx.globalAlpha=.6*l.z;
+    const lg=ctx.createRadialGradient(-s*.12,-s*.1,0,0,0,s);
+    lg.addColorStop(0,'#22703a');
+    lg.addColorStop(.4,'#145228');
+    lg.addColorStop(.8,'#0a3518');
+    lg.addColorStop(1,'#061e0e');
+    ctx.fillStyle=lg;
+    const gap=.28;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.arc(0,0,s, gap, Math.PI*2-gap);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha=.18*l.z;
+    ctx.strokeStyle='#3a9050'; ctx.lineWidth=.6;
+    for(let vi=0;vi<6;vi++){
+      const va=(vi/6)*Math.PI*1.6+gap+.1;
+      ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(va)*s*.9, Math.sin(va)*s*.9); ctx.stroke();
+    }
+    ctx.globalAlpha=.35*l.z;
+    ctx.strokeStyle='rgba(60,140,80,.5)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(0,0,s,.05,Math.PI*2-.05); ctx.stroke();
+    ctx.globalAlpha=1;
+    ctx.restore();
+  }
+
+  function drawStem(l){
+    if(l.y<H*.5) return;
+    const bob=Math.sin(T*l.speed+l.phase)*3;
+    ctx.save();
+    ctx.globalAlpha=.22*l.z;
+    ctx.strokeStyle='#1a5c28'; ctx.lineWidth=1.1*l.z;
+    ctx.beginPath();
+    ctx.moveTo(l.x, l.y+l.size*.1+bob);
+    ctx.quadraticCurveTo(l.x+rnd(-7,7), l.y+l.size*.55, l.x, Math.min(H,l.y+l.size*1.15));
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawLotus3D(l, shadowPass){
+    if(l.y<H*.5-l.size*.5) return;
+    const bob=Math.sin(T*l.speed+l.phase)*3;
+    const cx=l.x, cy=l.y+bob;
+    const s=l.size*l.z;
+    const h=l.hue, sat=l.sat;
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.scale(1, 0.3 + l.z*0.22);
+    const rot=l.la+T*l.speed*.25;
+
+    if(shadowPass){
+      ctx.globalAlpha=.18*l.z;
+      const sg=ctx.createRadialGradient(6,8,0,6,8,s*1.1);
+      sg.addColorStop(0,'rgba(0,0,0,.7)');
+      sg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=sg;
+      ctx.beginPath(); ctx.ellipse(6,8,s*1.1,s*.38,0,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1; ctx.restore(); return;
+    }
+
+    const layers = [
+      {NP:12, sScale:1.0,   rotOff:0,      openMul:1.0,  brightBase:28, alphaBase:.82},
+      {NP:10, sScale:0.82,  rotOff:.16,    openMul:0.78, brightBase:36, alphaBase:.88},
+      {NP:8,  sScale:0.62,  rotOff:.32,    openMul:0.55, brightBase:45, alphaBase:.92},
+      {NP:6,  sScale:0.42,  rotOff:.5,     openMul:0.32, brightBase:54, alphaBase:.96},
+    ];
+
+    layers.forEach((layer, li)=>{
+      const ls = s * layer.sScale;
+      const lr = rot + layer.rotOff;
+      const openTilt = l.open * layer.openMul;
+      const pw = ls * 0.32;
+      const ph = ls * 0.38;
+
+      for(let i=0;i<layer.NP;i++){
+        const a = (i/layer.NP)*Math.PI*2 + lr;
+        const shimmer = Math.sin(a*2 + T*.4 + l.phase) * 6;
+        const bright = layer.brightBase + shimmer;
+        ctx.save();
+        ctx.rotate(a);
+
+        const tiltFactor = openTilt * 0.9;
+        ctx.transform(1, 0, 0, 1, 0, 0);
+
+        ctx.globalAlpha = layer.alphaBase;
+
+        const pg = ctx.createLinearGradient(0, 0, ph*0.3, -ls);
+        pg.addColorStop(0,   `hsla(${h-15},${sat}%,${bright-10}%,1)`);
+        pg.addColorStop(0.15,`hsla(${h-8}, ${sat}%,${bright-4}%,1)`);
+        pg.addColorStop(0.5, `hsla(${h+5}, ${sat+4}%,${bright+10}%,1)`);
+        pg.addColorStop(0.78,`hsla(${h+18},${sat+8}%,${bright+22}%,.85)`);
+        pg.addColorStop(1,   `hsla(${h+35},${sat+5}%,${bright+35}%,.15)`);
+        ctx.fillStyle = pg;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(
+           pw*0.9,  -ls*0.15,
+           pw*1.18, -ls*(0.5+tiltFactor*0.18),
+           ph*0.18, -ls*(0.88+tiltFactor*0.1)
+        );
+        ctx.bezierCurveTo(
+          -pw*0.05, -ls*0.96,
+          -pw*0.05, -ls*0.96,
+          -ph*0.18, -ls*(0.88+tiltFactor*0.1)
+        );
+        ctx.bezierCurveTo(
+          -pw*1.18, -ls*(0.5+tiltFactor*0.18),
+          -pw*0.9,  -ls*0.15,
+          0, 0
+        );
+        ctx.fill();
+
+        const hl = ctx.createLinearGradient(pw*0.15, -ls*0.2, 0, -ls*0.85);
+        hl.addColorStop(0, `hsla(${h+30},90%,${bright+40}%,.0)`);
+        hl.addColorStop(.4, `hsla(${h+30},90%,${bright+45}%,.18)`);
+        hl.addColorStop(1,  `hsla(${h+30},90%,${bright+50}%,.0)`);
+        ctx.fillStyle = hl;
+        ctx.beginPath();
+        ctx.moveTo(pw*0.05, -ls*0.1);
+        ctx.bezierCurveTo(pw*0.55, -ls*0.3, pw*0.5, -ls*0.65, pw*0.1, -ls*0.82);
+        ctx.bezierCurveTo(-pw*0.1, -ls*0.65, -pw*0.1, -ls*0.3, -pw*0.05, -ls*0.1);
+        ctx.fill();
+
+        ctx.restore();
+      }
+    });
+
+    const stamenR = s*0.13;
+    const stamenG = ctx.createRadialGradient(-stamenR*.2,-stamenR*.15,0,0,0,stamenR*2.2);
+    stamenG.addColorStop(0, `hsla(${h+65},95%,96%,1)`);
+    stamenG.addColorStop(.3, `hsla(${h+50},92%,85%,1)`);
+    stamenG.addColorStop(.65,`hsla(${h+30},88%,72%,.9)`);
+    stamenG.addColorStop(1,  `hsla(${h+10},82%,50%,.2)`);
+    ctx.globalAlpha=1;
+    ctx.fillStyle=stamenG;
+    ctx.beginPath(); ctx.arc(0,0,stamenR*2.2,0,Math.PI*2); ctx.fill();
+
+    for(let si=0;si<8;si++){
+      const sa=(si/8)*Math.PI*2;
+      const sr=stamenR*1.4;
+      ctx.globalAlpha=.7;
+      ctx.fillStyle=`hsla(${h+55},90%,88%,.8)`;
+      ctx.beginPath(); ctx.arc(Math.cos(sa)*sr, Math.sin(sa)*sr, stamenR*.28,0,Math.PI*2); ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawFireflies(){
+    fireflies.forEach(f=>{
+      f.x+=f.vx+Math.sin(T*f.tw*.75+f.tp)*.32;
+      f.y+=f.vy+Math.cos(T*f.tw*.6+f.tp)*.22;
+      if(f.x<W*.04)f.vx=Math.abs(f.vx);
+      if(f.x>W*.96)f.vx=-Math.abs(f.vx);
+      if(f.y<H*.38)f.vy=Math.abs(f.vy);
+      if(f.y>H*.66)f.vy=-Math.abs(f.vy);
+      const fa=(Math.sin(T*f.tw+f.tp)*.45+.55)*f.a;
+      const fg=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.sz*4.5);
+      fg.addColorStop(0,`rgba(195,255,175,${fa*.92})`);
+      fg.addColorStop(.3,`rgba(155,255,135,${fa*.38})`);
+      fg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=fg;
+      ctx.beginPath(); ctx.arc(f.x,f.y,f.sz*4.5,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=`rgba(225,255,195,${fa})`;
+      ctx.beginPath(); ctx.arc(f.x,f.y,f.sz*.6,0,Math.PI*2); ctx.fill();
+    });
+  }
+
+  function frame(){
+    T+=.016;
+    ctx.clearRect(0,0,W,H);
+    drawSky();
+    drawMilkyWay();
+    drawMoon();
+    drawStars();
+    drawMountains();
+    drawWater();
+    drawFog();
+    drawRipples();
+    lotusArr.sort((a,b)=>a.z-b.z);
+    lotusArr.forEach(l=>drawStem(l));
+    lotusArr.forEach(l=>drawLotus3D(l,true));
+    lotusArr.forEach(l=>drawLilyPad(l));
+    lotusArr.forEach(l=>drawLotus3D(l,false));
+    drawFireflies();
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize',resize);
+  frame();
+
+  const pCanvas=document.getElementById('petal');
+  const pCtx=pCanvas.getContext('2d');
+  let raining=false, drops=[];
+
+  function Petal(){this.reset();}
+  Petal.prototype.reset=function(){
+    this.x=rnd(0,window.innerWidth);
+    this.y=rnd(-150,-10);
+    this.s=rnd(7,22);
+    this.hue=rnd(305,368);
+    this.a=rnd(.5,.93);
+    this.vx=rnd(-1.3,1.3);
+    this.vy=rnd(1.6,4.8);
+    this.angle=Math.random()*Math.PI*2;
+    this.av=rnd(-.065,.065);
+    this.w=Math.random()*Math.PI*2;
+  };
+  Petal.prototype.update=function(){
+    this.w+=.048; this.x+=this.vx+Math.sin(this.w)*.9; this.y+=this.vy; this.angle+=this.av;
+    if(this.y>window.innerHeight+50) this.reset();
+  };
+  Petal.prototype.draw=function(){
+    pCtx.save(); pCtx.translate(this.x,this.y); pCtx.rotate(this.angle);
+    pCtx.globalAlpha=this.a;
+    const s=this.s;
+    for(let i=0;i<5;i++){
+      pCtx.save(); pCtx.rotate((Math.PI*2/5)*i);
+      pCtx.beginPath(); pCtx.moveTo(0,0);
+      pCtx.bezierCurveTo(s*.28,-s*.3,s*.33,-s*.68,0,-s);
+      pCtx.bezierCurveTo(-s*.33,-s*.68,-s*.28,-s*.3,0,0);
+      const pg=pCtx.createLinearGradient(0,0,0,-s);
+      pg.addColorStop(0,`hsla(${this.hue},86%,28%,1)`);
+      pg.addColorStop(.5,`hsla(${this.hue+15},92%,62%,.9)`);
+      pg.addColorStop(1,`hsla(${this.hue+30},96%,83%,.28)`);
+      pCtx.fillStyle=pg; pCtx.fill(); pCtx.restore();
+    }
+    pCtx.restore();
+  };
+
+  function rainLoop(){
+    if(!raining) return;
+    pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight;
+    while(drops.length<130) drops.push(new Petal());
+    pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+    drops.forEach(d=>{d.update();d.draw();});
+    requestAnimationFrame(rainLoop);
+  }
+
+  function launchYes(){
+    const modal=document.getElementById('modal');
+    modal.classList.add('on');
+    // Reset to slide 1
+    document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+    document.getElementById('slide1').classList.add('active');
+    pCanvas.style.display='block';
+    raining=true;
+    pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight;
+    drops=[];
+    rainLoop();
+    setTimeout(()=>{raining=false; pCanvas.style.display='none';},12000);
+  }
+
+  // Slide navigation
+  function goSlide(from, to){
+    document.getElementById('slide'+from).classList.remove('active');
+    document.getElementById('slide'+to).classList.add('active');
+  }
+  function addSlideNav(id, from, to){
+    var el = document.getElementById(id);
+    el.addEventListener('click',    function(e){e.stopPropagation(); goSlide(from,to);});
+    el.addEventListener('touchend', function(e){e.stopPropagation(); e.preventDefault(); goSlide(from,to);});
+  }
+  addSlideNav('nextBtn1',1,2);
+  addSlideNav('nextBtn2',2,3);
+  addSlideNav('nextBtn3',3,4);
+  addSlideNav('nextBtn4',4,5);
+  addSlideNav('nextBtn5',5,6);
+  addSlideNav('nextBtn6',6,7);
+  addSlideNav('nextBtn7',7,8);
+  addSlideNav('nextBtn8',8,9);
+  addSlideNav('nextBtn9',9,10);
+  addSlideNav('nextBtn13',13,14);
+  // ── NUEVOS listeners para slides 11 y 12 ──
+  document.getElementById('nextBtn11').addEventListener('click', function(e){e.stopPropagation(); goSlide(11,12);});
+  document.getElementById('nextBtn11').addEventListener('touchend', function(e){e.stopPropagation(); e.preventDefault(); goSlide(11,12);});
+  document.getElementById('nextBtn12').addEventListener('click', function(e){e.stopPropagation(); goSlide(12,13);});
+  document.getElementById('nextBtn12').addEventListener('touchend', function(e){e.stopPropagation(); e.preventDefault(); goSlide(12,13);});
+
+  // Slide 10: Sí goes to 11, No escapes
+  document.getElementById('slide10Yes').addEventListener('click', function(e){e.stopPropagation(); goSlide(10,11);});
+  document.getElementById('slide10Yes').addEventListener('touchend', function(e){e.stopPropagation(); e.preventDefault(); goSlide(10,11);});
+
+  (function(){
+    const noBtn = document.getElementById('slide10No');
+
+    noBtn.style.position = 'absolute';
+    noBtn.style.top  = '0px';
+    noBtn.style.left = '160px';
+
+    function moveRandom(){
+      const card = noBtn.closest('.mcard');
+      const cr   = card.getBoundingClientRect();
+      const nr   = noBtn.getBoundingClientRect();
+      const pad  = 10;
+      const maxX = cr.width  - nr.width  - pad;
+      const maxY = cr.height - nr.height - pad;
+      const x = Math.random() * (maxX - pad) + pad;
+      const y = Math.random() * (maxY - pad) + pad;
+      noBtn.style.left = x + 'px';
+      noBtn.style.top  = y + 'px';
+    }
+
+    noBtn.addEventListener('mouseover',   function(e){ e.stopPropagation(); moveRandom(); });
+    noBtn.addEventListener('touchstart',  function(e){ e.stopPropagation(); e.preventDefault(); moveRandom(); });
+  })();
+
+  // Touch / tap passthrough for Sí button
+  document.getElementById('btnSi').addEventListener('touchend', function(e){e.preventDefault(); launchYes();});
+  document.getElementById('btnSi').addEventListener('click', launchYes);
+
+  // No button logic
+  const btnNo = document.getElementById('btnNo');
+  const noTexts = [
+    'No 😏',
+    '¿No le harás caso a este bomboncito? :v 😤',
+    '¡Qué terca mi niña! :3 😄',
+    '¡jajfkajfka acepta ya! 😂',
+    'Última oportunidad... 😜'
+  ];
+  const noScales = [1, 0.82, 0.64, 0.46, 0.28];
+  const noPads   = ['0.75rem 2rem','0.58rem 1.5rem','0.44rem 1.05rem','0.3rem 0.7rem','0.18rem 0.4rem'];
+  const noFonts  = ['1.08rem','0.94rem','0.76rem','0.58rem','0.4rem'];
+  let noCount = 0;
+
+  btnNo.style.fontSize = noFonts[0];
+  btnNo.style.padding  = noPads[0];
+
+  function handleNo(){
+    noCount++;
+    if(noCount >= 5){
+      btnNo.style.opacity='0';
+      btnNo.style.transform='scale(0.04)';
+      btnNo.style.pointerEvents='none';
+      setTimeout(()=>{ btnNo.style.display='none'; }, 500);
+      const q = document.getElementById('propQuestion');
+      q.style.transition='all .6s ease';
+      q.style.color='rgba(255,230,100,.95)';
+      q.textContent='Siempre solo hubo una opción, mi niña -<- 💕';
+    } else {
+      btnNo.textContent = noTexts[noCount];
+      btnNo.style.fontSize = noFonts[noCount];
+      btnNo.style.padding  = noPads[noCount];
+      btnNo.style.transform = `scale(${noScales[noCount]})`;
+      btnNo.style.opacity   = String(1 - noCount * 0.15);
+    }
+  }
+  btnNo.addEventListener('click', handleNo);
+  btnNo.addEventListener('touchend', function(e){e.preventDefault(); handleNo();});
+
+  // Close modal on outside tap/click
+  const modal = document.getElementById('modal');
+  modal.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('on'); });
+  modal.addEventListener('touchend', function(e){ if(e.target===this) this.classList.remove('on'); });
+
+})();
+
+// ── YouTube player (slide 14) ──────────────────────────────
+var ytReady = false, ytPlayer = null, ytPending = false;
+
+function onYouTubeIframeAPIReady(){
+  ytReady = true;
+  ytPlayer = new YT.Player('yt-player', {
+    height:'1', width:'1',
+    videoId:'W7z886y7Ro0',
+    playerVars:{autoplay:0, controls:0, playsinline:1, rel:0, modestbranding:1},
+    events:{
+      onReady: function(e){
+        if(ytPending){ e.target.playVideo(); ytPending=false; }
+      },
+      onStateChange: function(e){
+        var s = document.getElementById('music-status');
+        var bp = document.getElementById('btnPlay');
+        var bpa = document.getElementById('btnPause');
+        if(e.data === YT.PlayerState.PLAYING){
+          if(s) s.textContent = '♫ sonando para ti...';
+          if(bp) bp.style.display='none';
+          if(bpa) bpa.style.display='inline-block';
+        } else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED){
+          if(s) s.textContent = 'toca ▶ para escuchar';
+          if(bp) bp.style.display='inline-block';
+          if(bpa) bpa.style.display='none';
+        }
+      }
+    }
+  });
+}
+
+// Load YouTube IFrame API dynamically
+(function(){
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScript = document.getElementsByTagName('script')[0];
+  firstScript.parentNode.insertBefore(tag, firstScript);
+})();
+
+document.addEventListener('DOMContentLoaded', function(){
+  var btnPlay  = document.getElementById('btnPlay');
+  var btnPause = document.getElementById('btnPause');
+
+  if(btnPlay) {
+    btnPlay.addEventListener('click', function(e){ e.stopPropagation(); playMusic(); });
+    btnPlay.addEventListener('touchend', function(e){ e.stopPropagation(); e.preventDefault(); playMusic(); });
+  }
+  if(btnPause) {
+    btnPause.addEventListener('click', function(e){ e.stopPropagation(); pauseMusic(); });
+    btnPause.addEventListener('touchend', function(e){ e.stopPropagation(); e.preventDefault(); pauseMusic(); });
+  }
+});
+
+function playMusic(){
+  if(ytPlayer && ytReady){ ytPlayer.playVideo(); }
+  else { ytPending = true; }
+}
+function pauseMusic(){
+  if(ytPlayer && ytReady){ ytPlayer.pauseVideo(); }
+}
+
+</script>
